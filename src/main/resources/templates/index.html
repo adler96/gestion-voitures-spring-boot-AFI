@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhml"
+	xmlns:th="http://www.thymeleaf.org">
+	
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+	<!-- <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" /> -->
+	<link rel="stylesheet" th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}">
+	
+	<title>Accueil - Gestion de Voitures</title>
+
+</head>
+<body>
+<div class="container">
+	<nav class="navbar">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href=".">Gestion de Voitures</a>
+			</div>
+		</div>
+	</nav>
+
+
+	<div class="container">
+		<div>
+			<form method="GET" th:action="@{/search}">
+				<input type="text" id="strInput" name="termes" /> &nbsp;
+				<div id="priceRange">
+					<label>Entre: 
+						<input type="number" value="0" name="min" min="0" />
+						FCFA et 
+						<input type="number" value="0" name="max" min="0" />
+						FCFA
+					</label>
+				</div> &nbsp;
+				<label>Critere: </label> &nbsp;
+				<select name="critere" id="selection">
+					<option value="marque" selected>Marque</option>
+					<option value="provenance">Provenance</option>
+					<option value="prix">Prix</option>
+				</select> &nbsp;
+				
+				<!-- <input type="range" min="0" max="200000000" name=""/> -->
+				<input type="submit" value="Rechercher" />
+			</form>
+		</div>
+		
+		<h2 class="h2">Liste des Voitures</h2>
+		<div class="table-responsive">
+			<table class="table table-striped table-sm">
+				<thead>
+					<tr>
+						<th>id</th>
+						<th>marque</th>
+						<th>prix</th>
+						<th>couleur</th>
+						<th>provenance</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${voitures.empty}">
+						<td colspan="6">Aucune Voiture en base de données</td>
+					</tr>
+					<tr th:each="voiture: ${voitures}">
+						<td><span th:text="${voiture.id}"></span></td>
+						<td><span th:text="${voiture.marque}"></span></td>
+						<td><span th:text="${voiture.prix}"></span></td>
+						<td><span th:text="${voiture.couleur}"></span></td>
+						<td><span th:text="${voiture.provenance}"></span></td>
+						<td>
+							<a th:href="@{/edit/{id}(id=${voiture.id})}"><button class="btn btn-info">Modifier</button></a>
+							<a th:href="@{/delete/{id}(id=${voiture.id})}"><button class="btn btn-danger">Supprimer</button></a>						
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<h4><a th:href="@{/new}">Ajouter une nouvelle Voiture</a></h4>
+
+	</div>
+
+	<!-- <script src="./../static/js/bootstrap.bundle.min.js"></script> -->
+	<!-- <script th:src="@{/js/bootstrap.bundle.min.js}"></script> -->
+	
+	<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js}"></script>
+    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+	
+	<script>
+		const priceRange = document.querySelector('#priceRange');
+		const dropdown = document.querySelector('#selection');
+		const strInput = document.querySelector('#strInput');
+		
+		document.addEventListener("DOMContentLoaded", function() {
+			priceRange.style.display = 'none';
+		})	;	
+		
+		dropdown.addEventListener('change', function(e) {
+			if(dropdown.value != "prix") {
+				priceRange.style.display = 'none';
+				strInput.style.display = 'inline';
+			} else {
+				priceRange.style.display = 'block';
+				strInput.style.display = 'none';
+			}
+		});
+	</script>
+</div>
+</body>
+</html>
